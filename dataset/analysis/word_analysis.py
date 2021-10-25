@@ -43,8 +43,8 @@ def iterator():
                     word_count[word] += 1
                 except KeyError:
                     word_count[word] = 1
-    
-    print(word_count)
+    word_count_sorted = sorted(word_count.items(), key=lambda x:x[1], reverse=True)
+    print(word_count_sorted)
 
 if __name__=="__main__":
     iterator()
