@@ -29,9 +29,14 @@ def transfer(ori):
     #result = wn.lemmas(ori)
     #print(result)
     if '-' in result and len(Q) == 0:
+        print("changing : " + result)
+        #語尾が-でつながる単語、改行される単語
         if result[-1] == '-':
             Q.append(result.replace('-',''))
             return ""
+        elif result[0] == '-':
+            result.replace('-', '')
+            print("changed : " + result)
         else:
             return result
     if len(Q) > 0:
