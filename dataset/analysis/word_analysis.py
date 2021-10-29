@@ -80,11 +80,14 @@ def check_empty_word():
     #writeToJson('./data/duplicate_words.json', duplicate_words)
 
     not_in_manga = list(set_freq - set_manga)
-    not_dup_words = {not_in_manga[i] : json_data[not_in_manga[i]] for i in range(0,len(not_in_manga))}
+    not_dup_words = [{"word" : not_in_manga[i], "rank" : json_data[not_in_manga[i]]["rank"], "parts": json_data[not_in_manga[i]]["parts"]} for i in range(0,len(not_in_manga))]
+    not_dup_words = sorted(not_dup_words, key= lambda k: k["rank"], reverse=True)
+    print(len(not_dup_words))
+    #not_dup_words = {not_in_manga[i] : json_data[not_in_manga[i]] for i in range(0,len(not_in_manga))}
+    output = {"description" : "The word list that are not in manga", "length" : len(not_dup_words), "data" : not_dup_words}
+    writeToJson('./data/not_in_manga.json', output)
     
-    writeToJson('./data/not_in_manga.json', not_dup_words)
-    
-    
+ 
 
 if __name__=="__main__":
     check_empty_word()
