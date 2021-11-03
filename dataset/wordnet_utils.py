@@ -1,3 +1,4 @@
+
 from nltk.corpus import wordnet as wn
 
 class WordnetUtil:
@@ -6,5 +7,7 @@ class WordnetUtil:
 
     def transfer( self, ori ):
         trans = wn.morphy(ori)
-        if(trans!=ori):
+        if not trans:
+            print(ori + '!!!! NONE')
+        elif(trans!=ori):
             print(ori + '---->' + trans)
