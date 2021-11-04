@@ -57,7 +57,7 @@ def loadLengthData(title, episode):
         return episodelen, pagelen
 
 def loadData():
-    title = 'EJ09'
+    title = 'EJ01'
     episode = 1
 
     epi_max, p_max = loadLengthData(title, episode)
@@ -105,7 +105,7 @@ def loadData():
     return word_epi
 
 def writeCSV(data):
-    with open('word_data_EJ09_ep1.csv', 'a', newline='') as f:
+    with open('word_data_EJ01_ep1.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         for row in data:
             writer.writerow(row)
