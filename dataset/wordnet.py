@@ -1,14 +1,20 @@
+#2021-11-04 できる限り単語を成形、文章の形で保存するためのコード
 import json
 import codecs
 import pandas as pd
 import re
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
+from wordnet_utils import WordnetUtil
+import wordnet_utils
 from collections import deque
 import csv
 
+
 Q = deque()
 flag = False
+utils = WordnetUtil()
+
 
 #-で単語を結合させる
 def lemmatizer(word):
@@ -23,7 +29,7 @@ def lemmatizer(word):
 
 
 def transfer(ori):
-    replacements = {'\\xe2\\x80\\x94': '-', '\\xe2\\x80\\x99': '\'', '_': '', '\\': ''}
+    replacements = {'\\xe2\\x80\\x94': '-', '\\xe2\\x80\\x98': '','\\xe2\\x80\\x99': '\'', '_': '', 'xc2xbb' : '', 'xc2xcab' : '','\\': ''}
     '|'.join(map(re.escape, replacements.keys()))
     result = re.sub('({})'.format('|'.join(map(re.escape, replacements.keys()))), lambda m: replacements[m.group()], ori)
     #result = wn.lemmas(ori)
@@ -41,7 +47,7 @@ def transfer(ori):
             return result
     if len(Q) > 0:
         result = Q.popleft() + result
-        lemmatizer(result)
+        result = utils.word_transfer(result)
         return result
     
     return result
@@ -97,15 +103,16 @@ def loadData():
                     trans = transfer(w)
                     if not trans == "":
                         word_tb.append(trans)
-                li = [title, episode, p, tb]
+                lis = [title, episode, p, tb]
                 tb += 1
-                li.extend(word_tb)
+                lis.extend(word_tb)
                 #print(li)
-                word_epi.append(li)
+
+                word_epi.append(lis)
     return word_epi
 
 def writeCSV(data):
-    with open('word_data_EJ01_ep1.csv', 'a', newline='') as f:
+    with open('word_data_EJ01_ep1.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for row in data:
             writer.writerow(row)
