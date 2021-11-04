@@ -105,11 +105,24 @@ def loadData():
                         word_tb.append(trans)
                 lis = [title, episode, p, tb]
                 tb += 1
-                lis.extend(word_tb)
+                #lis.extend(word_tb)
+                
+                lis.append(list_to_str(word_tb))
                 #print(li)
 
                 word_epi.append(lis)
     return word_epi
+
+def list_to_str(li):
+    result = ""
+    if li != []:
+        result = li[0]
+        if len(li) > 1:
+            for i in range(1,len(li)):
+                result += "," + li[i]
+    return result
+
+
 
 def writeCSV(data):
     with open('word_data_EJ01_ep1.csv', 'w', newline='') as f:
