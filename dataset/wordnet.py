@@ -83,7 +83,7 @@ def loadData():
             dftb = dfp[dfp['tb'] == tb]
             for v in dftb['words']:
 
-                print(v)
+                #print(v)
                 v = v.lower()
                 v = v.split(',')
                 word_tb = []

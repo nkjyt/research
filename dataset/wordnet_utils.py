@@ -11,3 +11,5 @@ class WordnetUtil:
             print('!!!! NONE !!!!' + ori)
         elif(trans!=ori):
             print(ori + '---->' + trans)
+        elif(trans==ori):
+            print("Not changed")
