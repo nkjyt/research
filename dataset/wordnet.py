@@ -101,6 +101,9 @@ def loadData():
                     #print(w)
                     #print(transfer(w))
                     trans = transfer(w)
+                    if trans != transfer_old(trans):
+                        #print(trans + " : old_transfer : " + transfer_old(trans))
+                        trans = transfer_old(trans)
                     if not trans == "":
                         word_tb.append(trans)
                 lis = [title, episode, p, tb]
@@ -122,10 +125,33 @@ def list_to_str(li):
                 result += "," + li[i]
     return result
 
-
+#単語リスト作成時にstopwordを省き、荒めに省く
+def transfer_old( ori ):#単語の原形に変換したり，明らかに変な認識の単語を省きます
+    if(ori!=None):
+        trans = wn.morphy(ori)
+        trans_ADJ = wn.morphy(ori, wn.ADJ)
+        if(trans!=None):
+            if(trans_ADJ!=None):
+                if(trans==ori):
+                    #print('--- '+ ori)
+                    #print(trans)
+                    return trans
+                else:
+                   # print(' >>> '+ ori)
+                   # print(trans_ADJ)
+                    return trans_ADJ
+            else:
+               # print('>>> '+ ori)
+               # print(trans)
+                return trans
+        else:
+        #    print("deleted  :  " + ori)
+            return ''
+   # print("deleted" + ori)
+    return ''
 
 def writeCSV(data):
-    with open('word_data_EJ01_ep1.csv', 'w', newline='') as f:
+    with open('word_data_EJ01_ep1_word_only.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for row in data:
             writer.writerow(row)
