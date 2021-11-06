@@ -15,15 +15,15 @@ class WordnetUtil:
             print("Not changed")
     
     def word_transfer(self, ori):
-        print("input : " + ori)
+        #print("input : " + ori)
         trans = wn.morphy(ori)
         if not trans:
-            print('!!!! NONE !!!!' + ori)
+            #print('!!!! NONE !!!!' + ori)
             return ori
         elif(trans!=ori):
-            print(ori + '---->' + trans)
+            #print(ori + '---->' + trans)
             return trans
         elif(trans==ori):
-            print("Not changed")
+            #print("Not changed")
             return ori
     

@@ -1,5 +1,5 @@
-#2021-11-04 できる限り単語を成形、文章の形で保存するためのコード
-import json
+#2021-11-04 
+import os
 import codecs
 import pandas as pd
 import re
@@ -15,6 +15,18 @@ Q = deque()
 flag = False
 utils = WordnetUtil()
 
+#manga_namelist.csvからタイトル名などのデータを取得
+def getTitle():
+    csv_data = []
+    file_path = r"C:\Users\nkjmy\Documents\dataset\manga_namelist.csv"
+    csv_file = open(file_path, "r",  encoding="ms932", errors="", newline="" )
+    f = csv.reader(csv_file,  delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+    #print(header)
+    for row in f:
+        #[1]はタイトル, [4]はエピソード数
+        #print(row)
+        csv_data.append(row)
+    return csv_data
 
 #-で単語を結合させる
 def lemmatizer(word):
@@ -27,7 +39,6 @@ def lemmatizer(word):
     return li[0]
 
 
-
 def transfer(ori):
     replacements = {'\\xe2\\x80\\x94': '-', '\\xe2\\x80\\x98': '','\\xe2\\x80\\x99': '\'', '_': '', 'xc2xbb' : '', 'xc2xcab' : '','\\': ''}
     '|'.join(map(re.escape, replacements.keys()))
@@ -35,14 +46,14 @@ def transfer(ori):
     #result = wn.lemmas(ori)
     #print(result)
     if '-' in result and len(Q) == 0:
-        print("changing : " + result)
+        #print("changing : " + result)
         #語尾が-でつながる単語、改行される単語
         if result[-1] == '-':
             Q.append(result.replace('-',''))
             return ""
         elif result[0] == '-':
             result.replace('-', '')
-            print("changed : " + result)
+            #print("changed : " + result)
         else:
             return result
     if len(Q) > 0:
@@ -62,12 +73,11 @@ def loadLengthData(title, episode):
         pagelen = df['page'][0]
         return episodelen, pagelen
 
-def loadData():
-    title = 'EJ01'
-    episode = 1
+def loadData(title, episode):
 
-    epi_max, p_max = loadLengthData(title, episode)
-    print(epi_max, p_max)
+
+    #epi_max, p_max = loadLengthData(title, episode)
+
 
     df = None
     with codecs.open('wordlist.csv','r','utf-8','ignore') as f:
@@ -75,6 +85,10 @@ def loadData():
 
     dft = df[df['title'] == title]
     dfe = dft[dft['epi'] == episode]
+
+
+    p_max = dfe['page'].max()
+
 
     word_epi = []
 
@@ -129,6 +143,7 @@ def list_to_str(li):
 def transfer_old( ori ):#単語の原形に変換したり，明らかに変な認識の単語を省きます
     if(ori!=None):
         trans = wn.morphy(ori)
+        
         trans_ADJ = wn.morphy(ori, wn.ADJ)
         if(trans!=None):
             if(trans_ADJ!=None):
@@ -150,13 +165,20 @@ def transfer_old( ori ):#単語の原形に変換したり，明らかに変な�
    # print("deleted" + ori)
     return ''
 
-def writeCSV(data):
-    with open('word_data_EJ01_ep1_word_only.csv', 'w', newline='') as f:
+def writeCSV(data, title, episode):
+    data.insert(0,["title", "episode", "page_id", "tb"])
+    with open('half_wordlist/'+ title +'/word_data_'+ title +'_ep'+ str(episode) +'.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for row in data:
             writer.writerow(row)
 
+csv_data = getTitle()
 
-data = loadData()
-writeCSV(data)
+for row in csv_data:
+    print(row[1])
+    os.mkdir('half_wordlist/' + row[0])
+    for ep in range(1,int(row[2])+1):
+        print(ep)
+        data = loadData(row[0], ep)
+        writeCSV(data, row[0], ep)
 
