@@ -166,7 +166,7 @@ def transfer_old( ori ):#単語の原形に変換したり，明らかに変な�
     return ''
 
 def writeCSV(data, title, episode):
-    data.insert(0,["title", "episode", "page_id", "tb"])
+    data.insert(0,["title", "episode", "page_id", "tb", "words"])
     with open('half_wordlist/'+ title +'/word_data_'+ title +'_ep'+ str(episode) +'.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for row in data:
@@ -176,7 +176,7 @@ csv_data = getTitle()
 
 for row in csv_data:
     print(row[1])
-    os.mkdir('half_wordlist/' + row[0])
+    #os.mkdir('half_wordlist/' + row[0])
     for ep in range(1,int(row[2])+1):
         print(ep)
         data = loadData(row[0], ep)

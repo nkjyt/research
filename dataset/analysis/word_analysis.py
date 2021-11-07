@@ -65,9 +65,19 @@ def iterator():
     k = word_count.keys()
     return k
     
+def get_keys(is_return_with_value = False):
+    f = open("./data/link_to_page.json")
+    json_data = json.load(f)
+    if is_return_with_value:
+        return json_data['data']
+    else:
+        words = json_data['data']
+        keys = words.keys()
+        return keys
 
 def check_empty_word():
-    manga_keys = iterator()
+    manga_keys = get_keys()
+    link_data = get_keys(True)
     json_data = getWordsFromJson("./data/wordfreqlist.json", True, True)
     freq_keys = json_data.keys()
     set_manga = set(manga_keys)
@@ -76,8 +86,9 @@ def check_empty_word():
     dup = set_manga & set_freq
 
     dup_list = list(dup)
-    duplicate_words = {dup_list[i] : json_data[dup_list[i]] for i in range(0,len(dup_list))}
-    #writeToJson('./data/duplicate_words.json', duplicate_words)
+    duplicate_words = {dup_list[i] : link_data[dup_list[i]] for i in range(0,len(dup_list))}
+    print(len(duplicate_words))
+    writeToJson('./data/duplicate_words.json', duplicate_words)
 
     not_in_manga = list(set_freq - set_manga)
     #save_word_of_not_in_manga(not_in_manga, json_data)
